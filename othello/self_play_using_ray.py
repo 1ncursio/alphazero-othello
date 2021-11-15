@@ -13,9 +13,11 @@ from pathlib import Path
 import numpy as np
 import pickle
 import os
+import ray
 
 # 파라미터 준비
-SP_GAME_COUNT = 500  # 셀프 플레이를 수행할 게임 수(오리지널: 25,000)
+SP_GAME_COUNT = 125  # 셀프 플레이를 수행할 게임 수(오리지널: 25,000)
+RAY_CPU_COUNT = 4
 SP_TEMPERATURE = 1.0  # 볼츠만 분포의 온도 파라미터
 
 
@@ -75,6 +77,7 @@ def play(model):
 
 
 # 셀프 플레이
+@ray.remote
 def self_play():
     # 학습 데이터
     history = []
@@ -92,21 +95,26 @@ def self_play():
         history.extend(h)
 
         # 출력
-        print("\rSelfPlay {}/{}".format(i + 1, SP_GAME_COUNT), end="")
+        print("\rSelfPlay {}/{}".format(i + 1, SP_GAME_COUNT))
         print("실행에 걸린 시간:", datetime.now() - start_time)
         # print length of history
         print("history 길이:", len(history), end="")
     print("")
 
     # 학습 데이터 저장
-    print(history)
-    write_data(history)
+    # write_data(history)
 
     # 모델 파기
     K.clear_session()
     del model
+    return history
 
 
 # 동작 확인
 if __name__ == "__main__":
-    self_play()
+    ray.init(num_cpus=RAY_CPU_COUNT)
+    self_play_ids = [self_play.remote() for _ in range(RAY_CPU_COUNT)]
+    returned = ray.get(self_play_ids)
+    history = [item for sublist in returned for item in sublist]
+    print("history 길이:", len(history))
+    write_data(history)
