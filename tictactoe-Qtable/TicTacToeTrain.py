@@ -38,8 +38,6 @@ if __name__ == "__main__":
         p2.exp_rate = 0.5-x/(ler//1.5)
         p1.exp_rate = 0.5-x/(ler//1.5)
         border.reset()
-        # print((0.5-x/(ler/2)))
         if x % 1000 == 0:
             print(x, '번째 훈련중')
-            print((0.5-x/(ler//1.5)))
     p2.save()
