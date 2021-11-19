@@ -118,3 +118,6 @@ if __name__ == "__main__":
     history = [item for sublist in returned for item in sublist]
     print("history 길이:", len(history))
     write_data(history)
+
+# disable GPU tensorflow
+# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
