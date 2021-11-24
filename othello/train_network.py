@@ -10,6 +10,7 @@ from tensorflow.keras import backend as K
 from pathlib import Path
 import numpy as np
 import pickle
+from datetime import datetime
 
 # 파라미터 준비
 RN_EPOCHS = 100  # 학습 횟수
@@ -25,6 +26,7 @@ def load_data():
 # 듀얼 네트워크 학습
 def train_network():
     # 학습 데이터 로드
+    start_time = datetime.now()
     history = load_data()
     xs, y_policies, y_values = zip(*history)
 
@@ -58,7 +60,7 @@ def train_network():
     # 학습 실행
     model.fit(xs, [y_policies, y_values], batch_size=128, epochs=RN_EPOCHS,
               verbose=0, callbacks=[lr_decay, print_callback])
-    print('')
+    print('training network is done', datetime.now() - start_time)
 
     # 최신 플레이어 모델 저장
     model.save('./model/latest.h5')

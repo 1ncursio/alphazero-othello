@@ -82,24 +82,20 @@ def self_play():
     # 베스트 플레이어 모델 로드
     model = load_model("./model/best.h5")
 
+    start_time = datetime.now()
     # 여러 차례 게임 실행
     for i in range(SP_GAME_COUNT):
         # 실행에 걸린 시간 출력
-        start_time = datetime.now()
 
         # 1 게임 실행
         h = play(model)
         history.extend(h)
 
         # 출력
-        print("\rSelfPlay {}/{}".format(i + 1, SP_GAME_COUNT), end="")
-        print("실행에 걸린 시간:", datetime.now() - start_time)
-        # print length of history
-        print("history 길이:", len(history), end="")
+        print("\rSelfPlay {}/{}".format(i + 1, SP_GAME_COUNT), datetime.now() - start_time)
     print("")
 
     # 학습 데이터 저장
-    print(history)
     write_data(history)
 
     # 모델 파기

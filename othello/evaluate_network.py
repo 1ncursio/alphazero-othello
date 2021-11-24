@@ -3,6 +3,7 @@
 # ====================
 
 # 패키지 임포트
+from datetime import datetime
 from game import State
 from pv_mcts import pv_mcts_action
 from tensorflow.keras.models import load_model
@@ -55,6 +56,7 @@ def update_best_player():
 # 네트워크 평가
 def evaluate_network():
     # 최신 플레이어 모델 로드
+    start_time = datetime.now()
     model0 = load_model('./model/latest.h5')
 
     # 베스트 플레이어 모델 로드
@@ -87,6 +89,7 @@ def evaluate_network():
     del model0
     del model1
 
+    print('evaluate network is done', datetime.now() - start_time)
     # 베스트 플레이어 교대
     if average_point > 0.5:
         update_best_player()

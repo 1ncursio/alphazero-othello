@@ -3,6 +3,23 @@
 # ====================
 
 # 패키지 임포트
+import os
+import tensorflow as tf
+
+physical_devices = tf.config.list_physical_devices('GPU')
+try:
+  # 첫 번째 GPU 비활성화
+  tf.config.set_visible_devices([], 'GPU')
+#   tf.config.set_visible_devices(physical_devices[1:], 'GPU')
+  logical_devices = tf.config.list_logical_devices('GPU')
+  # 첫 번째 GPU에 대해 논리 장치가 생성되지 않았습니다.
+  assert len(logical_devices) == len(physical_devices) - 1
+except:
+  # 유효하지 않은 장치 또는 초기화 된 가상 장치를 수정할 수 없습니다.
+  pass
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 from game import State
 from pv_mcts import pv_mcts_scores
 from dual_network import DN_OUTPUT_SIZE
@@ -12,13 +29,24 @@ from tensorflow.keras import backend as K
 from pathlib import Path
 import numpy as np
 import pickle
-import os
 import ray
 
 # 파라미터 준비
 SP_GAME_COUNT = 125  # 셀프 플레이를 수행할 게임 수(오리지널: 25,000)
-RAY_CPU_COUNT = 4
+RAY_CPU_COUNT = 1
 SP_TEMPERATURE = 1.0  # 볼츠만 분포의 온도 파라미터
+
+# try:
+#     # Disable all GPUS
+#     tf.config.set_visible_devices([], 'GPU')
+#     visible_devices = tf.config.get_visible_devices()
+#     for device in visible_devices:
+#         assert device.device_type != 'GPU'
+# except:
+#     # Invalid device or cannot modify virtual devices once initialized.
+#     pass
+
+
 
 
 # 선 수 플레이어 가치
