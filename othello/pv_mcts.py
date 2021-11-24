@@ -53,7 +53,7 @@ def pv_mcts_scores(model, state, temperature):
             self.p = p  # 정책
             self.w = 0  # 가치 누계
             self.n = 0  # 시행 횟수
-            self.child_nodes = None  # 子ノード群
+            self.child_nodes = None  # 자식 노드들
 
         # 국면 가치 누계
         def evaluate(self):

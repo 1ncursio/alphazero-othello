@@ -10,6 +10,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras import backend as K
 from pathlib import Path
 from shutil import copy
+from datetime import datetime
 import numpy as np
 
 # 파라미터 준비
@@ -49,8 +50,8 @@ def play(next_actions):
 
 # 베스트 플레이어 교대
 def update_best_player():
-    copy('./model/latest.h5', './model/best.h5')
-    print('Change BestPlayer')
+    copy("./model/latest.h5", "./model/best.h5")
+    print("Change BestPlayer")
 
 
 # 네트워크 평가
@@ -60,7 +61,7 @@ def evaluate_network():
     model0 = load_model('./model/latest.h5')
 
     # 베스트 플레이어 모델 로드
-    model1 = load_model('./model/best.h5')
+    model1 = load_model("./model/best.h5")
 
     # PV MCTS를 활용해 행동 선택을 수행하는 함수 생성
     next_action0 = pv_mcts_action(model0, EN_TEMPERATURE)
@@ -70,6 +71,7 @@ def evaluate_network():
     # 여러 차례 대전을 반복
     total_point = 0
     for i in range(EN_GAME_COUNT):
+        start_time = datetime.now()
         # 1 게임 실행
         if i % 2 == 0:
             total_point += play(next_actions)
@@ -77,12 +79,13 @@ def evaluate_network():
             total_point += 1 - play(list(reversed(next_actions)))
 
         # 출력
-        print('\rEvaluate {}/{}'.format(i + 1, EN_GAME_COUNT), end='')
-    print('')
+        print("\rEvaluate {}/{}".format(i + 1, EN_GAME_COUNT), end="")
+        print("실행에 걸린 시간", datetime.now() - start_time)
+    print("")
 
     # 평균 포인트 계산
     average_point = total_point / EN_GAME_COUNT
-    print('AveragePoint', average_point)
+    print("AveragePoint", average_point)
 
     # 모델 파기
     K.clear_session()
@@ -99,5 +102,5 @@ def evaluate_network():
 
 
 # 동작 확인
-if __name__ == '__main__':
+if __name__ == "__main__":
     evaluate_network()
