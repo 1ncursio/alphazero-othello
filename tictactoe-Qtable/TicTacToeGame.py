@@ -5,21 +5,15 @@ import tkinter.font as tkFont
 from functools import partial
 import numpy as np
 import pickle
-
+import time
 root = Tk()
-root.geometry('600x600')
-label = Label(root, text='Let fuck tictactoeGame')
-label.pack()
-contaier = Frame(root, width=500,
-                 height=500,)
-contaier.pack()
+root.geometry('240x240')
+
 helv36 = tkFont.Font(family='Helvetica', size=15, weight=tkFont.BOLD)
 
 
 border = Border()
 border.reset()
-
-buttons = []
 
 with open('qValue.p', 'rb') as f:
     tableData = pickle.load(f)
@@ -39,25 +33,48 @@ def reStart():
 
 
 def mapLoad():
+    contaier.delete('all')
+    contaier.create_rectangle(0, 0, 240, 240, width=0.0, fill='#00A0FF')
+    contaier.create_line(80, 0, 80, 240, width=2.0, fill='#0077BB')
+    contaier.create_line(160, 0, 160, 240, width=2.0, fill='#0077BB')
+    contaier.create_line(0, 80, 240, 80, width=2.0, fill='#0077BB')
+    contaier.create_line(0, 160, 240, 160, width=2.0, fill='#0077BB')
+
     state = np.reshape(border.state, [9])
-    for index, b in enumerate(buttons):
-        if state[index] == np.float(1.0):
-            b['text'] = ('O')
+    for index, s in enumerate(state):
+        x = (index % 3) * 80 + 10
+        y = int(index / 3) * 80 + 10
+        if s == np.float(1.0):
+            contaier.create_oval(x, y, x + 60, y + 60,
+                                 width=2.0, outline='#FFFFFF')
 
-        elif state[index] == np.float(-1.0):
-            b['text'] = ('X')
-        else:
-            b['text'] = ('')
+        elif s == np.float(-1.0):
+            contaier.create_line(x, y, x + 60, y + 60,
+                                 width=2.0, fill='#5D5D5D')
+            contaier.create_line(x + 60, y, x, y + 60,
+                                 width=2.0, fill='#5D5D5D')
 
 
-def change_label_number(action):
+def change_label_number(event):
     global check
+
+    if(check):
+        reStart()
+        return
+
+    x = int(event.x / 80)
+    y = int(event.y / 80)
+    if x < 0 or 2 < x or y < 0 or 2 < y:  # 범위 외
+        return
+    action = (y, x)
+
     position = border.availablePositions()
 
     if action not in position or check:
         return
 
     border.step(action, 1)
+    mapLoad()
 
     position = border.availablePositions()
 
@@ -71,25 +88,21 @@ def change_label_number(action):
         check = True
         print('게임끝')
 
+        return
+        # reStart()
+
     if len(border.availablePositions()) == 1:
         check = True
         print('무승부')
+
+        # reStart()
         return
 
 
-for x in range(3):
-    for y in range(3):
-        b1 = Button(contaier, width=15,
-                    height=5, font=helv36,
-                    command=partial(change_label_number, (x, y)))
-        b1.grid(row=x, column=y)
+contaier = Canvas(width=240, height=240, highlightthickness=0)
+contaier.bind('<Button-1>', change_label_number)
+contaier.pack()
 
-        buttons.append(b1)
 
-b1 = Button(root, width=15,
-            height=2, font=helv36,
-            text="다시하기",
-            command=partial(reStart),
-            )
-b1.pack()
+mapLoad()
 root.mainloop()
