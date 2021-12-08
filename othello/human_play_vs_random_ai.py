@@ -3,11 +3,10 @@
 # ====================
 
 # 패키지 임포트
-from game import State
+from game import State, random_action
 from pv_mcts import pv_mcts_action, pv_mcts_scores
 from tensorflow.keras.models import load_model
 from pathlib import Path
-from threading import Thread
 import tkinter as tk
 
 # 베스트 플레이어 모델 로드
@@ -28,7 +27,10 @@ class GameUI(tk.Frame):
         self.state = State()
 
         # PV MCTS를 활용한 행동을 선택하는 함수 생성
-        self.next_action = pv_mcts_action(model, 0.0)
+        # 랜덤 탐색을 통해 행동을 선택하는 함수
+
+        # self.next_action = pv_mcts_action(model, 0.0)
+        self.next_action = random_action
 
         # 캔버스 생성
         self.c = tk.Canvas(
