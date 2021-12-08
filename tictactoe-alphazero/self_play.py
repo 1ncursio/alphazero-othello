@@ -22,7 +22,7 @@ SP_TEMPERATURE = 1.0  # 볼츠만 분포의 온도 파라미터
 # 선 수를 둔 플레이어 가치
 def first_player_value(ended_state):
     # 1: 선 수 플레이어 승리, -1: 선 수 플레이어 패배, 0: 무승부
-    if ended_state.is_lose():
+    if ended_state.is_loss():
         return -1 if ended_state.is_first_player() else 1
     return 0
 
@@ -30,10 +30,11 @@ def first_player_value(ended_state):
 # 학습 데이터 저장
 def write_data(history):
     now = datetime.now()
-    os.makedirs('./data/', exist_ok=True)  # 폴더가 없는 경우에는 생성
-    path = './data/{:04}{:02}{:02}{:02}{:02}{:02}.history'.format(
-        now.year, now.month, now.day, now.hour, now.minute, now.second)
-    with open(path, mode='wb') as f:
+    os.makedirs("./data/", exist_ok=True)  # 폴더가 없는 경우에는 생성
+    path = "./data/{:04}{:02}{:02}{:02}{:02}{:02}.history".format(
+        now.year, now.month, now.day, now.hour, now.minute, now.second
+    )
+    with open(path, mode="wb") as f:
         pickle.dump(history, f)
 
 
@@ -79,7 +80,7 @@ def self_play():
     history = []
 
     # 베스트 플레이어 모델 로드
-    model = load_model('./model/best.h5')
+    model = load_model("./model/best.h5")
 
     # 여러 차례 게임 실행
     for i in range(SP_GAME_COUNT):
@@ -88,8 +89,8 @@ def self_play():
         history.extend(h)
 
         # 출력
-        print('\rSelfPlay {}/{}'.format(i+1, SP_GAME_COUNT), end='')
-    print('')
+        print("\rSelfPlay {}/{}".format(i + 1, SP_GAME_COUNT), end="")
+    print("")
 
     # 학습 데이터 저장
     write_data(history)
@@ -100,5 +101,5 @@ def self_play():
 
 
 # 동작 확인
-if __name__ == '__main__':
+if __name__ == "__main__":
     self_play()

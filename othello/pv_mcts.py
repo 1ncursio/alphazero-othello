@@ -60,7 +60,7 @@ def pv_mcts_scores(model, state, temperature):
             # 게임 종료 시
             if self.state.is_done():
                 # 승패 결과로 가치 얻기
-                value = -1 if self.state.is_lose() else 0
+                value = -1 if self.state.is_loss() else 0
 
                 # 누계 가치와 시행 횟수 갱신
                 self.w += value

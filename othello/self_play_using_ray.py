@@ -6,17 +6,17 @@
 import os
 import tensorflow as tf
 
-physical_devices = tf.config.list_physical_devices('GPU')
+physical_devices = tf.config.list_physical_devices("GPU")
 try:
-  # 첫 번째 GPU 비활성화
-  tf.config.set_visible_devices([], 'GPU')
-#   tf.config.set_visible_devices(physical_devices[1:], 'GPU')
-  logical_devices = tf.config.list_logical_devices('GPU')
-  # 첫 번째 GPU에 대해 논리 장치가 생성되지 않았습니다.
-  assert len(logical_devices) == len(physical_devices) - 1
+    # 첫 번째 GPU 비활성화
+    tf.config.set_visible_devices([], "GPU")
+    #   tf.config.set_visible_devices(physical_devices[1:], 'GPU')
+    logical_devices = tf.config.list_logical_devices("GPU")
+    # 첫 번째 GPU에 대해 논리 장치가 생성되지 않았습니다.
+    assert len(logical_devices) == len(physical_devices) - 1
 except:
-  # 유효하지 않은 장치 또는 초기화 된 가상 장치를 수정할 수 없습니다.
-  pass
+    # 유효하지 않은 장치 또는 초기화 된 가상 장치를 수정할 수 없습니다.
+    pass
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
@@ -47,12 +47,10 @@ SP_TEMPERATURE = 1.0  # 볼츠만 분포의 온도 파라미터
 #     pass
 
 
-
-
 # 선 수 플레이어 가치
 def first_player_value(ended_state):
     # 1: 선 수 플레이어 승리, -1: 선 수 플레이어 패배, 0: 무승부
-    if ended_state.is_lose():
+    if ended_state.is_loss():
         return -1 if ended_state.is_first_player() else 1
     return 0
 
