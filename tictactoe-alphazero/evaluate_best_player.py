@@ -17,7 +17,7 @@ EP_GAME_COUNT = 10  # 평가 1회당 게임 수
 # 선 수를 둔 플레이어의 포인트
 def first_player_point(ended_state):
     # 1: 선 수 플레이어 승리, 0: 선 수 플레이어 패배, 0.5: 무승부
-    if ended_state.is_lose():
+    if ended_state.is_loss():
         return 0 if ended_state.is_first_player() else 1
     return 0.5
 

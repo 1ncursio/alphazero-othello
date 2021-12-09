@@ -16,7 +16,7 @@ class State:
         self.enemy_pieces = enemy_pieces if enemy_pieces != None else [0] * 9
 
     # 돌의 수 얻기
-    def piece_count(self, pieces):
+    def pieces_count(self, pieces):
         count = 0
         for i in pieces:
             if i == 1:
@@ -49,11 +49,13 @@ class State:
 
     # 무승부 여부 확인
     def is_draw(self):
-        return self.piece_count(self.pieces) + self.piece_count(self.enemy_pieces) == 9
+        return (
+            self.pieces_count(self.pieces) + self.pieces_count(self.enemy_pieces) == 9
+        )
 
     # 게임 종료 여부 확인
     def is_done(self):
-        return self.is_lose() or self.is_draw()
+        return self.is_loss() or self.is_draw()
 
     # 다음 상태 얻기
     def next(self, action):
@@ -71,7 +73,7 @@ class State:
 
     # 선 수 여부 확인
     def is_first_player(self):
-        return self.piece_count(self.pieces) == self.piece_count(self.enemy_pieces)
+        return self.pieces_count(self.pieces) == self.pieces_count(self.enemy_pieces)
 
     # 문자열 표시
     def __str__(self):
@@ -98,7 +100,7 @@ def random_action(state):
 # 알파베타법을 활용한 상태 가치 계산
 def alpha_beta(state, alpha, beta):
     # 패배 시 상태 가치 -1
-    if state.is_lose():
+    if state.is_loss():
         return -1
 
     # 무승부 시, 상테 가치 0
@@ -137,7 +139,7 @@ def alpha_beta_action(state):
 # 플레이아웃
 def playout(state):
     # 패배 시, 상태 가치 -1
-    if state.is_lose():
+    if state.is_loss():
         return -1
 
     # 무승부 시, 상태 가치 0
@@ -169,7 +171,7 @@ def mcts_action(state):
             # 게임 종료 시
             if self.state.is_done():
                 # 승패 결과로 가치 얻기
-                value = -1 if self.state.is_lose() else 0  # 패배 시 -1, 무승부 시 0
+                value = -1 if self.state.is_loss() else 0  # 패배 시 -1, 무승부 시 0
 
                 # 가치 누계와 시행 횟수 갱신
                 self.w += value

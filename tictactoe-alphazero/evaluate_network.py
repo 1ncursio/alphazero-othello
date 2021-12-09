@@ -19,7 +19,7 @@ EN_TEMPERATURE = 1.0  # 볼츠만 분포 온도
 # 선 수를 둔 플레이어의 포인트
 def first_player_point(ended_state):
     # 1: 선 수 플레이어 승리, 0: 선 수 플레이어 패배, 0.5: 무승부
-    if ended_state.is_lose():
+    if ended_state.is_loss():
         return 0 if ended_state.is_first_player() else 1
     return 0.5
 
@@ -48,17 +48,17 @@ def play(next_actions):
 
 # 베스트 플레이어 교대
 def update_best_player():
-    copy('./model/latest.h5', './model/best.h5')
-    print('Change BestPlayer')
+    copy("./model/latest.h5", "./model/best.h5")
+    print("Change BestPlayer")
 
 
 # 네트워크 평가
 def evaluate_network():
     # 최신 플레이어 모델 로드
-    model0 = load_model('./model/latest.h5')
+    model0 = load_model("./model/latest.h5")
 
     # 베스트 플레이어 모델 로드
-    model1 = load_model('./model/best.h5')
+    model1 = load_model("./model/best.h5")
 
     # PV MCTS를 활용해 행동 선택을 수행하는 함수 생성
     next_action0 = pv_mcts_action(model0, EN_TEMPERATURE)
@@ -75,12 +75,12 @@ def evaluate_network():
             total_point += 1 - play(list(reversed(next_actions)))
 
         # 출력
-        print('\rEvaluate {}/{}'.format(i + 1, EN_GAME_COUNT), end='')
-    print('')
+        print("\rEvaluate {}/{}".format(i + 1, EN_GAME_COUNT), end="")
+    print("")
 
     # 평균 포인트 계산
     average_point = total_point / EN_GAME_COUNT
-    print('AveragePoint', average_point)
+    print("AveragePoint", average_point)
 
     # 모델 파기
     K.clear_session()
@@ -96,5 +96,5 @@ def evaluate_network():
 
 
 # 동작 확인
-if __name__ == '__main__':
+if __name__ == "__main__":
     evaluate_network()

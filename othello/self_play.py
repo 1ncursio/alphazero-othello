@@ -22,7 +22,7 @@ SP_TEMPERATURE = 1.0  # 볼츠만 분포의 온도 파라미터
 # 선 수 플레이어 가치
 def first_player_value(ended_state):
     # 1: 선 수 플레이어 승리, -1: 선 수 플레이어 패배, 0: 무승부
-    if ended_state.is_lose():
+    if ended_state.is_loss():
         return -1 if ended_state.is_first_player() else 1
     return 0
 
@@ -92,7 +92,9 @@ def self_play():
         history.extend(h)
 
         # 출력
-        print("\rSelfPlay {}/{}".format(i + 1, SP_GAME_COUNT), datetime.now() - start_time)
+        print(
+            "\rSelfPlay {}/{}".format(i + 1, SP_GAME_COUNT), datetime.now() - start_time
+        )
     print("")
 
     # 학습 데이터 저장

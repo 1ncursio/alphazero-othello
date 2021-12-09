@@ -21,7 +21,7 @@ EN_TEMPERATURE = 1.0  # 볼츠만 분포 온도
 # 선 수 플레이어의 포인트
 def first_player_point(ended_state):
     # 1: 선 수 플레이어 승리, 0: 선 수 플레이어 패배, 0.5: 무승부
-    if ended_state.is_lose():
+    if ended_state.is_loss():
         return 0 if ended_state.is_first_player() else 1
     return 0.5
 
@@ -58,7 +58,7 @@ def update_best_player():
 def evaluate_network():
     # 최신 플레이어 모델 로드
     start_time = datetime.now()
-    model0 = load_model('./model/latest.h5')
+    model0 = load_model("./model/latest.h5")
 
     # 베스트 플레이어 모델 로드
     model1 = load_model("./model/best.h5")
@@ -92,7 +92,7 @@ def evaluate_network():
     del model0
     del model1
 
-    print('evaluate network is done', datetime.now() - start_time)
+    print("evaluate network is done", datetime.now() - start_time)
     # 베스트 플레이어 교대
     if average_point > 0.5:
         update_best_player()

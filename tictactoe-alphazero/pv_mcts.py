@@ -58,7 +58,7 @@ def pv_mcts_scores(model, state, temperature):
             # 게임 종료 시
             if self.state.is_done():
                 # 승패 결과로 가치 얻기
-                value = -1 if self.state.is_lose() else 0
+                value = -1 if self.state.is_loss() else 0
 
                 # 누계 가치와 시행 횟수 갱신
                 self.w += value
@@ -97,8 +97,10 @@ def pv_mcts_scores(model, state, temperature):
             t = sum(nodes_to_scores(self.child_nodes))
             pucb_values = []
             for child_node in self.child_nodes:
-                pucb_values.append((-child_node.w / child_node.n if child_node.n else 0.0) +
-                                   C_PUCT * child_node.p * sqrt(t) / (1 + child_node.n))
+                pucb_values.append(
+                    (-child_node.w / child_node.n if child_node.n else 0.0)
+                    + C_PUCT * child_node.p * sqrt(t) / (1 + child_node.n)
+                )
 
             # 아크 평가값이 가장 큰 자녀 노드 반환
             return self.child_nodes[np.argmax(pucb_values)]
@@ -137,9 +139,9 @@ def boltzman(xs, temperature):
 
 
 # 동작 확인
-if __name__ == '__main__':
+if __name__ == "__main__":
     # 모델 로드
-    path = sorted(Path('./model').glob('*.h5'))[-1]
+    path = sorted(Path("./model").glob("*.h5"))[-1]
     model = load_model(str(path))
 
     # 상태 생성
