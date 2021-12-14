@@ -13,7 +13,7 @@ import numpy as np
 from evaluate_network import EN_TEMPERATURE
 
 # 파라미터 준비
-EP_GAME_COUNT = 10  # 평가 1회당 게임 수
+EP_GAME_COUNT = 50  # 평가 1회당 게임 수
 
 
 # 선 수를 둔 플레이어의 포인트
