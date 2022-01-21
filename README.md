@@ -1,1 +1,1 @@
-"# alphazero-othello" 
+# alphazero-othello
